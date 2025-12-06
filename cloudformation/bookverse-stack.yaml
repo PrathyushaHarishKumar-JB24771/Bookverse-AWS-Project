@@ -1,0 +1,192 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "BookVerse Application Stack - EC2 (t3.micro), ALB, RDS, S3, Lambda"
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: "bookverse"
+
+  VpcId:
+    Type: String
+    Default: "vpc-0b8ec1b4c1fb565fe"
+
+  PublicSubnet1:
+    Type: String
+    Default: "subnet-0bafbd3e41f129add"
+
+  PublicSubnet2:
+    Type: String
+    Default: "subnet-0a9425392382dfd64"
+
+  PrivateSubnet1:
+    Type: String
+    Default: "subnet-0ca7aaeb8afbedaf9"
+
+  PrivateSubnet2:
+    Type: String
+    Default: "subnet-0626b046b0acb706a"
+
+  AlbSecurityGroup:
+    Type: String
+    Default: "sg-0cfd8feba2c2a384e"
+
+  Ec2SecurityGroup:
+    Type: String
+    Default: "sg-042792136c6ffcbf3"
+
+  RdsSecurityGroup:
+    Type: String
+    Default: "sg-0cbf842ae033959da"
+
+Resources:
+
+  UploadBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${ProjectName}-uploads-${AWS::AccountId}"
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-lambda-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  LogS3UploadsLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-log-s3-uploads"
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.11
+      Role: !GetAtt LambdaRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          def lambda_handler(event, context):
+              print("Received S3 event:")
+              print(json.dumps(event))
+              return {"statusCode": 200, "body": "logged"}
+
+  S3InvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LogS3UploadsLambda
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt UploadBucket.Arn
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "BookVerse DB Subnet Group"
+      SubnetIds:
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+
+  BookVerseDB:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    Properties:
+      DBInstanceIdentifier: !Sub "${ProjectName}-db"
+      Engine: mysql
+      EngineVersion: "8.0"
+      MasterUsername: admin
+      MasterUserPassword: Admin12345
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro
+      VPCSecurityGroups:
+        - !Ref RdsSecurityGroup
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      PubliclyAccessible: false
+
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub "${ProjectName}-launch-template"
+      LaunchTemplateData:
+        ImageId: ami-0fa3fe0fa7920f68e
+        InstanceType: t3.micro
+        SecurityGroupIds:
+          - !Ref Ec2SecurityGroup
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            yum update -y
+            amazon-linux-extras install -y python3
+            mkdir -p /var/www/html
+            echo "<html><body><h1>BookVerse</h1></body></html>" > /var/www/html/index.html
+            nohup python3 -m http.server 80 --directory /var/www/html &
+
+  ApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub "${ProjectName}-alb"
+      Subnets:
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+      SecurityGroups:
+        - !Ref AlbSecurityGroup
+      Scheme: internet-facing
+      Type: application
+
+  ALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-tg"
+      VpcId: !Ref VpcId
+      Port: 80
+      Protocol: HTTP
+      TargetType: instance
+      HealthCheckProtocol: HTTP
+      HealthCheckPath: /
+
+  ALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ALBTargetGroup
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${ProjectName}-asg"
+      VPCZoneIdentifier:
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+      MinSize: "1"
+      MaxSize: "3"
+      DesiredCapacity: "1"
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: "1"
+      TargetGroupARNs:
+        - !Ref ALBTargetGroup
+
+Outputs:
+  ALBDNS:
+    Description: "Application Load Balancer DNS name (URL)"
+    Value: !Join ["", ["http://", !GetAtt ApplicationLoadBalancer.DNSName]]
+
+  RDSEndpoint:
+    Description: "RDS endpoint address"
+    Value: !GetAtt BookVerseDB.Endpoint.Address
+
+  UploadBucketName:
+    Description: "S3 bucket name for uploads"
+    Value: !Ref UploadBucket
+
+  LambdaName:
+    Description: "Lambda function name"
+    Value: !Ref LogS3UploadsLambda
