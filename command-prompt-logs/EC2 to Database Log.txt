@@ -1,0 +1,37 @@
+[ec2-user@ip-10-0-2-197 ~]$ nano db_check.py
+[ec2-user@ip-10-0-2-197 ~]$ python3 db_check.py
+Traceback (most recent call last):
+  File "/home/ec2-user/db_check.py", line 1, in <module>
+    import mysql.connector
+ModuleNotFoundError: No module named 'mysql'
+[ec2-user@ip-10-0-2-197 ~]$ pip3 install --user mysql-connector-python
+Collecting mysql-connector-python
+  Downloading mysql_connector_python-9.4.0-cp39-cp39-manylinux_2_28_x86_64.whl (33.9 MB)
+     |████████████████████████████████| 33.9 MB 14.5 MB/s
+Installing collected packages: mysql-connector-python
+Successfully installed mysql-connector-python-9.4.0
+[ec2-user@ip-10-0-2-197 ~]$ pip3 show mysql-connector-python
+Name: mysql-connector-python
+Version: 9.4.0
+Summary: A self-contained Python driver for communicating with MySQL servers, using an API that is compliant with the Python Database API Specification v2.0 (PEP 249).
+Home-page: UNKNOWN
+Author: Oracle and/or its affiliates
+Author-email:
+License: GNU GPLv2 (with FOSS License Exception)
+Location: /home/ec2-user/.local/lib/python3.9/site-packages
+Requires:
+Required-by:
+[ec2-user@ip-10-0-2-197 ~]$ python3 db_check.py
+Connecting to RDS...
+✅ Connected. Sample rows:
+- [Romance] Pride and Prejudice by Jane Austen (id=1)
+- [Romance] Outlander by Diana Gabaldon (id=2)
+- [Romance] Wuthering Heights by Emily Brontë (id=3)
+- [Romance] The Notebook by Nicholas Sparks (id=4)
+- [Romance] Jane Eyre by Charlotte Brontë (id=5)
+- [Fiction] To Kill a Mockingbird by Harper Lee (id=6)
+- [Fiction] The Hobbit by J.R.R. Tolkien (id=7)
+- [Fiction] Project Hail Mary by Andy Weir (id=8)
+- [Fiction] 1984 by George Orwell (id=9)
+- [Fiction] The Alchemist by Paulo Coelho (id=10)
+[ec2-user@ip-10-0-2-197 ~]$

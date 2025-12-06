@@ -1,0 +1,260 @@
+Microsoft Windows [Version 10.0.26100.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\prath>ssh -i bookverse-key.pem ec2-user@50.17.100.62
+Warning: Identity file bookverse-key.pem not accessible: No such file or directory.
+The authenticity of host '50.17.100.62 (50.17.100.62)' can't be established.
+ED25519 key fingerprint is SHA256:Gfgv+VZF+iwAMb6E7dHNdsPipIdR00jn9BbYe2Ogtw8.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '50.17.100.62' (ED25519) to the list of known hosts.
+ec2-user@50.17.100.62: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+
+C:\Users\prath>ssh -i C:\Users\prath\bookverse-aws-project\bookverse-key.pem ec2-user@50.17.100.62
+   ,     #_
+   ~\_  ####_        Amazon Linux 2023
+  ~~  \_#####\
+  ~~     \###|
+  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+   ~~       V~' '->
+    ~~~         /
+      ~~._.   _/
+         _/ _/
+       _/m/'
+[ec2-user@ip-10-0-2-197 ~]$ sudo yum install -y mysql
+Amazon Linux 2023 Kernel Livepatch repository                                           287 kB/s |  29 kB     00:00
+No match for argument: mysql
+Error: Unable to find a match: mysql
+[ec2-user@ip-10-0-2-197 ~]$ sudo dnf install -y mariadb105
+Last metadata expiration check: 0:04:02 ago on Sat Dec  6 10:58:33 2025.
+Dependencies resolved.
+========================================================================================================================
+ Package                              Architecture     Version                              Repository             Size
+========================================================================================================================
+Installing:
+ mariadb105                           x86_64           3:10.5.29-1.amzn2023.0.1             amazonlinux           1.5 M
+Installing dependencies:
+ mariadb-connector-c                  x86_64           3.3.10-1.amzn2023.0.1                amazonlinux           211 k
+ mariadb-connector-c-config           noarch           3.3.10-1.amzn2023.0.1                amazonlinux           9.9 k
+ mariadb105-common                    x86_64           3:10.5.29-1.amzn2023.0.1             amazonlinux            28 k
+ perl-Sys-Hostname                    x86_64           1.23-477.amzn2023.0.7                amazonlinux            16 k
+
+Transaction Summary
+========================================================================================================================
+Install  5 Packages
+
+Total download size: 1.8 M
+Installed size: 19 M
+Downloading Packages:
+(1/5): mariadb-connector-c-config-3.3.10-1.amzn2023.0.1.noarch.rpm                      292 kB/s | 9.9 kB     00:00
+(2/5): mariadb-connector-c-3.3.10-1.amzn2023.0.1.x86_64.rpm                             5.0 MB/s | 211 kB     00:00
+(3/5): mariadb105-10.5.29-1.amzn2023.0.1.x86_64.rpm                                      28 MB/s | 1.5 MB     00:00
+(4/5): mariadb105-common-10.5.29-1.amzn2023.0.1.x86_64.rpm                              1.2 MB/s |  28 kB     00:00
+(5/5): perl-Sys-Hostname-1.23-477.amzn2023.0.7.x86_64.rpm                               797 kB/s |  16 kB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                    18 MB/s | 1.8 MB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Installing       : mariadb-connector-c-config-3.3.10-1.amzn2023.0.1.noarch                                        1/5
+  Installing       : mariadb-connector-c-3.3.10-1.amzn2023.0.1.x86_64                                               2/5
+  Installing       : mariadb105-common-3:10.5.29-1.amzn2023.0.1.x86_64                                              3/5
+  Installing       : perl-Sys-Hostname-1.23-477.amzn2023.0.7.x86_64                                                 4/5
+  Installing       : mariadb105-3:10.5.29-1.amzn2023.0.1.x86_64                                                     5/5
+  Running scriptlet: mariadb105-3:10.5.29-1.amzn2023.0.1.x86_64                                                     5/5
+  Verifying        : mariadb-connector-c-3.3.10-1.amzn2023.0.1.x86_64                                               1/5
+  Verifying        : mariadb-connector-c-config-3.3.10-1.amzn2023.0.1.noarch                                        2/5
+  Verifying        : mariadb105-3:10.5.29-1.amzn2023.0.1.x86_64                                                     3/5
+  Verifying        : mariadb105-common-3:10.5.29-1.amzn2023.0.1.x86_64                                              4/5
+  Verifying        : perl-Sys-Hostname-1.23-477.amzn2023.0.7.x86_64                                                 5/5
+
+Installed:
+  mariadb-connector-c-3.3.10-1.amzn2023.0.1.x86_64        mariadb-connector-c-config-3.3.10-1.amzn2023.0.1.noarch
+  mariadb105-3:10.5.29-1.amzn2023.0.1.x86_64              mariadb105-common-3:10.5.29-1.amzn2023.0.1.x86_64
+  perl-Sys-Hostname-1.23-477.amzn2023.0.7.x86_64
+
+Complete!
+[ec2-user@ip-10-0-2-197 ~]$ mysql --version
+mysql  Ver 15.1 Distrib 10.5.29-MariaDB, for Linux (x86_64) using  EditLine wrapper
+[ec2-user@ip-10-0-2-197 ~]$ mysql -h bookverse-db.cala26qu66fk.us-east-1.rds.amazonaws.com \
+      -u admin -p
+Enter password:
+ERROR 1045 (28000): Access denied for user 'admin'@'10.0.2.197' (using password: YES)
+[ec2-user@ip-10-0-2-197 ~]$ mysql -h bookverse-db.cala26qu66fk.us-east-1.rds.amazonaws.com \
+      -u admin -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 89
+Server version: 8.0.43 Source distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]> \h
+
+General information about MariaDB can be found at
+http://mariadb.org
+
+List of all client commands:
+Note that all text commands must be first on line and end with ';'
+?         (\?) Synonym for `help'.
+charset   (\C) Switch to another charset. Might be needed for processing binlog with multi-byte charsets.
+clear     (\c) Clear the current input statement.
+connect   (\r) Reconnect to the server. Optional arguments are db and host.
+delimiter (\d) Set statement delimiter.
+edit      (\e) Edit command with $EDITOR.
+ego       (\G) Send command to MariaDB server, display result vertically.
+exit      (\q) Exit mysql. Same as quit.
+go        (\g) Send command to MariaDB server.
+help      (\h) Display this help.
+nopager   (\n) Disable pager, print to stdout.
+notee     (\t) Don't write into outfile.
+nowarning (\w) Don't show warnings after every statement.
+pager     (\P) Set PAGER [to_pager]. Print the query results via PAGER.
+print     (\p) Print current command.
+prompt    (\R) Change your mysql prompt.
+quit      (\q) Quit mysql.
+rehash    (\#) Rebuild completion hash.
+sandbox   (\-) Disallow commands that access the file system (except \P without an argument and \e).
+source    (\.) Execute an SQL script file. Takes a file name as an argument.
+status    (\s) Get status information from the server.
+system    (\!) Execute a system shell command.
+tee       (\T) Set outfile [to_outfile]. Append everything into given outfile.
+use       (\u) Use another database. Takes database name as argument.
+warnings  (\W) Show warnings after every statement.
+
+For server side help, type 'help contents'
+
+MySQL [(none)]> ^C
+^A^C^C
+CREATE DATABASE bookverse;
+USE bookverse;
+
+CREATE TABLE books (
+  id INT AUTO_INCREMENT PRIMARY CREATE DATABASE bookverse;
+Query OK, 1 row affected (0.032 sec)
+
+MySQL [(none)]> USE bookverse;
+Database changed
+MySQL [bookverse]>
+MySQL [bookverse]> CREATE TABLE books (
+    ->   id INT AUTO_INCREMENT PRIMARY KEY,
+    ->   title VARCHAR(255),
+    ->   author VARCHAR(255),
+    ->   genre VARCHAR(50)
+    -> );
+e) VALUES
+  ('Pride and Prejudice', 'Jane Austen', 'Romance'),
+  ('1984', 'George Orwell', 'Fiction');
+
+SELECT * FROM books;
+Query OK, 0 rows affected (0.062 sec)
+
+MySQL [bookverse]>
+MySQL [bookverse]> INSERT INTO books (title, author, genre) VALUES
+    ->   ('Pride and Prejudice', 'Jane Austen', 'Romance'),
+    ->   ('1984', 'George Orwell', 'Fiction');
+Query OK, 2 rows affected (0.012 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MySQL [bookverse]>
+MySQL [bookverse]> SELECT * FROM books;
++----+---------------------+---------------+---------+
+| id | title               | author        | genre   |
++----+---------------------+---------------+---------+
+|  1 | Pride and Prejudice | Jane Austen   | Romance |
+|  2 | 1984                | George Orwell | Fiction |
++----+---------------------+---------------+---------+
+2 rows in set (0.001 sec)
+
+MySQL [bookverse]> ssh -i C:\Users\prath\bookverse-aws-project\bookverse-key.pem ec2-user@50.17.100.62
+ERROR: Unknown command '\U'.
+--------------
+ssh -i C:\Users
+--------------
+
+ERROR: Unknown command '\b'.
+ERROR: Unknown command '\b'.
+    -> USE bookversedb;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ssh -i C:\Usersrath\bookverse-aws-project\bookverse-key.pem ec2-user@50.17.100.6' at line 1
+MySQL [bookverse]>
+MySQL [bookverse]> CREATE TABLE books (
+    ->   id INT AUTO_INCREMENT PRIMARY KEY,
+    ->   title VARCHAR(255),
+    ->   author VARCHAR(255),
+    ->   genre VARCHAR(50)
+    -> );
+ERROR 1050 (42S01): Table 'books' already exists
+MySQL [bookverse]>
+MySQL [bookverse]> INSERT INTO books (title, author, genre) VALUES
+    -> ('Pride and Prejudice', 'Jane Austen', 'Romance'),
+    -> ('1984', 'George Orwell', 'Fiction'),
+    -> ('Sapiens', 'Yuval Noah Harari', 'Non-Fiction');
+Query OK, 3 rows affected (0.005 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MySQL [bookverse]> CREATE DATABASE IF NOT EXISTS bookversedb;
+Query OK, 1 row affected (0.010 sec)
+
+MySQL [bookverse]> USE bookversedb;
+Database changed
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255),
+  author VARCHAR(255),
+  genre VARCHAR(50)
+);
+MySQL [bookversedb]>
+MySQL [bookversedb]> CREATE TABLE IF NOT EXISTS books (
+    ->   id INT AUTO_INCREMENT PRIMARY KEY,
+    ->   title VARCHAR(255),
+    ->   author VARCHAR(255),
+    ->   genre VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.029 sec)
+
+MySQL [bookversedb]> INSERT INTO books (title, author, genre) VALUES
+    -> ('Pride and Prejudice', 'Jane Austen', 'Romance'),
+    -> ('Outlander', 'Diana Gabaldon', 'Romance'),
+    -> ('Wuthering Heights', 'Emily Brontë', 'Romance'),
+    -> ('The Notebook', 'Nicholas Sparks', 'Romance'),
+    -> ('Jane Eyre', 'Charlotte Brontë', 'Romance'),
+    ->
+    -> ('To Kill a Mockingbird', 'Harper Lee', 'Fiction'),
+    -> ('The Hobbit', 'J.R.R. Tolkien', 'Fiction'),
+    -> ('Project Hail Mary', 'Andy Weir', 'Fiction'),
+    -> ('1984', 'George Orwell', 'Fiction'),
+    -> ('The Alchemist', 'Paulo Coelho', 'Fiction'),
+    ->
+    -> ('The Diary of a Young Girl', 'Anne Frank', 'Non-Fiction'),
+    -> ('Sapiens', 'Yuval Noah Harari', 'Non-Fiction'),
+    -> ('The Glass Castle', 'Jeannette Walls', 'Non-Fiction'),
+    -> ('Atomic Habits', 'James Clear', 'Non-Fiction'),
+    -> ('Man''s Search for Meaning', 'Viktor E. Frankl', 'Non-Fiction');
+Query OK, 15 rows affected (0.006 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+MySQL [bookversedb]> SELECT * FROM books;
++----+---------------------------+-------------------+-------------+
+| id | title                     | author            | genre       |
++----+---------------------------+-------------------+-------------+
+|  1 | Pride and Prejudice       | Jane Austen       | Romance     |
+|  2 | Outlander                 | Diana Gabaldon    | Romance     |
+|  3 | Wuthering Heights         | Emily Brontë      | Romance     |
+|  4 | The Notebook              | Nicholas Sparks   | Romance     |
+|  5 | Jane Eyre                 | Charlotte Brontë  | Romance     |
+|  6 | To Kill a Mockingbird     | Harper Lee        | Fiction     |
+|  7 | The Hobbit                | J.R.R. Tolkien    | Fiction     |
+|  8 | Project Hail Mary         | Andy Weir         | Fiction     |
+|  9 | 1984                      | George Orwell     | Fiction     |
+| 10 | The Alchemist             | Paulo Coelho      | Fiction     |
+| 11 | The Diary of a Young Girl | Anne Frank        | Non-Fiction |
+| 12 | Sapiens                   | Yuval Noah Harari | Non-Fiction |
+| 13 | The Glass Castle          | Jeannette Walls   | Non-Fiction |
+| 14 | Atomic Habits             | James Clear       | Non-Fiction |
+| 15 | Man's Search for Meaning  | Viktor E. Frankl  | Non-Fiction |
++----+---------------------------+-------------------+-------------+
+15 rows in set (0.002 sec)

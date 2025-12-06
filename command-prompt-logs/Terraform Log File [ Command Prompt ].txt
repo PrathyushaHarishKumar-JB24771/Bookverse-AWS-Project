@@ -1,0 +1,1087 @@
+Microsoft Windows [Version 10.0.26100.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\prath>cd C:\Users\prath\bookverse-aws-project\terraform
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform init
+Initializing the backend...
+Initializing provider plugins...
+- Finding latest version of hashicorp/aws...
+- Installing hashicorp/aws v6.25.0...
+- Installed hashicorp/aws v6.25.0 (signed by HashiCorp)
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform plan
+╷
+│ Error: Invalid function argument
+│
+│   on main.tf line 109, in resource "aws_key_pair" "bookverse_key":
+│  109:   public_key = file("~/.ssh/id_rsa.pub")  # update if your public key is somewhere else
+│     ├────────────────
+│     │ while calling file(path)
+│
+│ Invalid value for "path" parameter: no file exists at "~/.ssh/id_rsa.pub"; this function works only with files that
+│ are distributed as part of the configuration source code, so if this file will be created by a resource in this
+│ configuration you must instead obtain this result from an attribute of that resource.
+╵
+
+C:\Users\prath\bookverse-aws-project\terraform>cd C:/Users/prath/bookverse-aws-project/terraform
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform plan
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.bookverse_ec2 will be created
+  + resource "aws_instance" "bookverse_ec2" {
+      + ami                                  = "ami-0fa3fe0fa7920f68e"
+      + arn                                  = (known after apply)
+      + associate_public_ip_address          = true
+      + availability_zone                    = (known after apply)
+      + disable_api_stop                     = (known after apply)
+      + disable_api_termination              = (known after apply)
+      + ebs_optimized                        = (known after apply)
+      + enable_primary_ipv6                  = (known after apply)
+      + force_destroy                        = false
+      + get_password_data                    = false
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      + id                                   = (known after apply)
+      + instance_initiated_shutdown_behavior = (known after apply)
+      + instance_lifecycle                   = (known after apply)
+      + instance_state                       = (known after apply)
+      + instance_type                        = "t2.micro"
+      + ipv6_address_count                   = (known after apply)
+      + ipv6_addresses                       = (known after apply)
+      + key_name                             = "bookverse-key"
+      + monitoring                           = (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      + placement_group_id                   = (known after apply)
+      + placement_partition_number           = (known after apply)
+      + primary_network_interface_id         = (known after apply)
+      + private_dns                          = (known after apply)
+      + private_ip                           = (known after apply)
+      + public_dns                           = (known after apply)
+      + public_ip                            = (known after apply)
+      + region                               = "us-east-1"
+      + secondary_private_ips                = (known after apply)
+      + security_groups                      = (known after apply)
+      + source_dest_check                    = true
+      + spot_instance_request_id             = (known after apply)
+      + subnet_id                            = (known after apply)
+      + tags                                 = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tags_all                             = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tenancy                              = (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      + vpc_security_group_ids               = (known after apply)
+
+      + capacity_reservation_specification (known after apply)
+
+      + cpu_options (known after apply)
+
+      + ebs_block_device (known after apply)
+
+      + enclave_options (known after apply)
+
+      + ephemeral_block_device (known after apply)
+
+      + instance_market_options (known after apply)
+
+      + maintenance_options (known after apply)
+
+      + metadata_options (known after apply)
+
+      + network_interface (known after apply)
+
+      + primary_network_interface (known after apply)
+
+      + private_dns_name_options (known after apply)
+
+      + root_block_device (known after apply)
+    }
+
+  # aws_internet_gateway.igw will be created
+  + resource "aws_internet_gateway" "igw" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + region   = "us-east-1"
+      + tags     = {
+          + "Name" = "BookVerse-IGW"
+        }
+      + tags_all = {
+          + "Name" = "BookVerse-IGW"
+        }
+      + vpc_id   = (known after apply)
+    }
+
+  # aws_key_pair.bookverse_key will be created
+  + resource "aws_key_pair" "bookverse_key" {
+      + arn             = (known after apply)
+      + fingerprint     = (known after apply)
+      + id              = (known after apply)
+      + key_name        = "bookverse-key"
+      + key_name_prefix = (known after apply)
+      + key_pair_id     = (known after apply)
+      + key_type        = (known after apply)
+      + public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDWUm/qG46TzrU+jpms3G4xs6bzm1Q/K9KBbXgefmS/4CqSde09q90AFHDkQyPtvwjnAbcVV/fvO9VGvl5nhx9EL0jQd03584+JsrErHyGenlV/RcvMmDrjCMoS/c8Wxw2/bpR1CqXF3eJPGY9MyBlNax9sxQWFKBKl2HvrSMkv8LfJgfh08Z3m1Wc5fF2+g371ZddMYY9SxZVN7UEepYFYamdu4md2PQ/0N/zkrO4Mti0QbZ4qcjp445D6KoQ3HCAK53PEIsTkZ6815sBVFYYCfCyk2fdIH4/izxUTZ6y7uGjRyMJNx5k2iblQBz/vdhf6QoC+xquqLcSBPmbWxCL9"
+      + region          = "us-east-1"
+      + tags_all        = (known after apply)
+    }
+
+  # aws_route_table.public_rt will be created
+  + resource "aws_route_table" "public_rt" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + region           = "us-east-1"
+      + route            = [
+          + {
+              + cidr_block                 = "0.0.0.0/0"
+              + gateway_id                 = (known after apply)
+                # (11 unchanged attributes hidden)
+            },
+        ]
+      + tags             = {
+          + "Name" = "BookVerse-Public-RT"
+        }
+      + tags_all         = {
+          + "Name" = "BookVerse-Public-RT"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # aws_route_table_association.public_assoc will be created
+  + resource "aws_route_table_association" "public_assoc" {
+      + id             = (known after apply)
+      + region         = "us-east-1"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # aws_security_group.alb_sg will be created
+  + resource "aws_security_group" "alb_sg" {
+      + arn                    = (known after apply)
+      + description            = "Allow HTTP/HTTPS"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 443
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 80
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + name                   = "bookverse-alb-sg"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags_all               = (known after apply)
+      + vpc_id                 = (known after apply)
+    }
+
+  # aws_security_group.ec2_sg will be created
+  + resource "aws_security_group" "ec2_sg" {
+      + arn                    = (known after apply)
+      + description            = "Allow HTTP from ALB and SSH from my IP"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "130.85.195.238/32",
+                ]
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = []
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = (known after apply)
+              + self             = false
+              + to_port          = 80
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + name                   = "bookverse-ec2-sg"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags_all               = (known after apply)
+      + vpc_id                 = (known after apply)
+    }
+
+  # aws_subnet.private_subnet will be created
+  + resource "aws_subnet" "private_subnet" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.2.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "us-east-1"
+      + tags                                           = {
+          + "Name" = "BookVerse-Private-Subnet"
+        }
+      + tags_all                                       = {
+          + "Name" = "BookVerse-Private-Subnet"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # aws_subnet.public_subnet will be created
+  + resource "aws_subnet" "public_subnet" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.1.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = true
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "us-east-1"
+      + tags                                           = {
+          + "Name" = "BookVerse-Public-Subnet"
+        }
+      + tags_all                                       = {
+          + "Name" = "BookVerse-Public-Subnet"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # aws_vpc.bookverse_vpc will be created
+  + resource "aws_vpc" "bookverse_vpc" {
+      + arn                                  = (known after apply)
+      + cidr_block                           = "10.0.0.0/16"
+      + default_network_acl_id               = (known after apply)
+      + default_route_table_id               = (known after apply)
+      + default_security_group_id            = (known after apply)
+      + dhcp_options_id                      = (known after apply)
+      + enable_dns_hostnames                 = (known after apply)
+      + enable_dns_support                   = true
+      + enable_network_address_usage_metrics = (known after apply)
+      + id                                   = (known after apply)
+      + instance_tenancy                     = "default"
+      + ipv6_association_id                  = (known after apply)
+      + ipv6_cidr_block                      = (known after apply)
+      + ipv6_cidr_block_network_border_group = (known after apply)
+      + main_route_table_id                  = (known after apply)
+      + owner_id                             = (known after apply)
+      + region                               = "us-east-1"
+      + tags                                 = {
+          + "Name" = "BookVerse-VPC"
+        }
+      + tags_all                             = {
+          + "Name" = "BookVerse-VPC"
+        }
+    }
+
+Plan: 10 to add, 0 to change, 0 to destroy.
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if
+you run "terraform apply" now.
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform apply -auto-approve
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.bookverse_ec2 will be created
+  + resource "aws_instance" "bookverse_ec2" {
+      + ami                                  = "ami-0fa3fe0fa7920f68e"
+      + arn                                  = (known after apply)
+      + associate_public_ip_address          = true
+      + availability_zone                    = (known after apply)
+      + disable_api_stop                     = (known after apply)
+      + disable_api_termination              = (known after apply)
+      + ebs_optimized                        = (known after apply)
+      + enable_primary_ipv6                  = (known after apply)
+      + force_destroy                        = false
+      + get_password_data                    = false
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      + id                                   = (known after apply)
+      + instance_initiated_shutdown_behavior = (known after apply)
+      + instance_lifecycle                   = (known after apply)
+      + instance_state                       = (known after apply)
+      + instance_type                        = "t2.micro"
+      + ipv6_address_count                   = (known after apply)
+      + ipv6_addresses                       = (known after apply)
+      + key_name                             = "bookverse-key"
+      + monitoring                           = (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      + placement_group_id                   = (known after apply)
+      + placement_partition_number           = (known after apply)
+      + primary_network_interface_id         = (known after apply)
+      + private_dns                          = (known after apply)
+      + private_ip                           = (known after apply)
+      + public_dns                           = (known after apply)
+      + public_ip                            = (known after apply)
+      + region                               = "us-east-1"
+      + secondary_private_ips                = (known after apply)
+      + security_groups                      = (known after apply)
+      + source_dest_check                    = true
+      + spot_instance_request_id             = (known after apply)
+      + subnet_id                            = (known after apply)
+      + tags                                 = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tags_all                             = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tenancy                              = (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      + vpc_security_group_ids               = (known after apply)
+
+      + capacity_reservation_specification (known after apply)
+
+      + cpu_options (known after apply)
+
+      + ebs_block_device (known after apply)
+
+      + enclave_options (known after apply)
+
+      + ephemeral_block_device (known after apply)
+
+      + instance_market_options (known after apply)
+
+      + maintenance_options (known after apply)
+
+      + metadata_options (known after apply)
+
+      + network_interface (known after apply)
+
+      + primary_network_interface (known after apply)
+
+      + private_dns_name_options (known after apply)
+
+      + root_block_device (known after apply)
+    }
+
+  # aws_internet_gateway.igw will be created
+  + resource "aws_internet_gateway" "igw" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + region   = "us-east-1"
+      + tags     = {
+          + "Name" = "BookVerse-IGW"
+        }
+      + tags_all = {
+          + "Name" = "BookVerse-IGW"
+        }
+      + vpc_id   = (known after apply)
+    }
+
+  # aws_key_pair.bookverse_key will be created
+  + resource "aws_key_pair" "bookverse_key" {
+      + arn             = (known after apply)
+      + fingerprint     = (known after apply)
+      + id              = (known after apply)
+      + key_name        = "bookverse-key"
+      + key_name_prefix = (known after apply)
+      + key_pair_id     = (known after apply)
+      + key_type        = (known after apply)
+      + public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDWUm/qG46TzrU+jpms3G4xs6bzm1Q/K9KBbXgefmS/4CqSde09q90AFHDkQyPtvwjnAbcVV/fvO9VGvl5nhx9EL0jQd03584+JsrErHyGenlV/RcvMmDrjCMoS/c8Wxw2/bpR1CqXF3eJPGY9MyBlNax9sxQWFKBKl2HvrSMkv8LfJgfh08Z3m1Wc5fF2+g371ZddMYY9SxZVN7UEepYFYamdu4md2PQ/0N/zkrO4Mti0QbZ4qcjp445D6KoQ3HCAK53PEIsTkZ6815sBVFYYCfCyk2fdIH4/izxUTZ6y7uGjRyMJNx5k2iblQBz/vdhf6QoC+xquqLcSBPmbWxCL9"
+      + region          = "us-east-1"
+      + tags_all        = (known after apply)
+    }
+
+  # aws_route_table.public_rt will be created
+  + resource "aws_route_table" "public_rt" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + region           = "us-east-1"
+      + route            = [
+          + {
+              + cidr_block                 = "0.0.0.0/0"
+              + gateway_id                 = (known after apply)
+                # (11 unchanged attributes hidden)
+            },
+        ]
+      + tags             = {
+          + "Name" = "BookVerse-Public-RT"
+        }
+      + tags_all         = {
+          + "Name" = "BookVerse-Public-RT"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # aws_route_table_association.public_assoc will be created
+  + resource "aws_route_table_association" "public_assoc" {
+      + id             = (known after apply)
+      + region         = "us-east-1"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # aws_security_group.alb_sg will be created
+  + resource "aws_security_group" "alb_sg" {
+      + arn                    = (known after apply)
+      + description            = "Allow HTTP/HTTPS"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 443
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 80
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + name                   = "bookverse-alb-sg"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags_all               = (known after apply)
+      + vpc_id                 = (known after apply)
+    }
+
+  # aws_security_group.ec2_sg will be created
+  + resource "aws_security_group" "ec2_sg" {
+      + arn                    = (known after apply)
+      + description            = "Allow HTTP from ALB and SSH from my IP"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "130.85.195.238/32",
+                ]
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = []
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = (known after apply)
+              + self             = false
+              + to_port          = 80
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + name                   = "bookverse-ec2-sg"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags_all               = (known after apply)
+      + vpc_id                 = (known after apply)
+    }
+
+  # aws_subnet.private_subnet will be created
+  + resource "aws_subnet" "private_subnet" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.2.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "us-east-1"
+      + tags                                           = {
+          + "Name" = "BookVerse-Private-Subnet"
+        }
+      + tags_all                                       = {
+          + "Name" = "BookVerse-Private-Subnet"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # aws_subnet.public_subnet will be created
+  + resource "aws_subnet" "public_subnet" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.1.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = true
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "us-east-1"
+      + tags                                           = {
+          + "Name" = "BookVerse-Public-Subnet"
+        }
+      + tags_all                                       = {
+          + "Name" = "BookVerse-Public-Subnet"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # aws_vpc.bookverse_vpc will be created
+  + resource "aws_vpc" "bookverse_vpc" {
+      + arn                                  = (known after apply)
+      + cidr_block                           = "10.0.0.0/16"
+      + default_network_acl_id               = (known after apply)
+      + default_route_table_id               = (known after apply)
+      + default_security_group_id            = (known after apply)
+      + dhcp_options_id                      = (known after apply)
+      + enable_dns_hostnames                 = (known after apply)
+      + enable_dns_support                   = true
+      + enable_network_address_usage_metrics = (known after apply)
+      + id                                   = (known after apply)
+      + instance_tenancy                     = "default"
+      + ipv6_association_id                  = (known after apply)
+      + ipv6_cidr_block                      = (known after apply)
+      + ipv6_cidr_block_network_border_group = (known after apply)
+      + main_route_table_id                  = (known after apply)
+      + owner_id                             = (known after apply)
+      + region                               = "us-east-1"
+      + tags                                 = {
+          + "Name" = "BookVerse-VPC"
+        }
+      + tags_all                             = {
+          + "Name" = "BookVerse-VPC"
+        }
+    }
+
+Plan: 10 to add, 0 to change, 0 to destroy.
+aws_key_pair.bookverse_key: Creating...
+aws_vpc.bookverse_vpc: Creating...
+aws_vpc.bookverse_vpc: Creation complete after 2s [id=vpc-0911a60255e733ec6]
+aws_subnet.public_subnet: Creating...
+aws_subnet.private_subnet: Creating...
+aws_security_group.alb_sg: Creating...
+aws_internet_gateway.igw: Creating...
+aws_internet_gateway.igw: Creation complete after 0s [id=igw-0df844b93b57ddbf5]
+aws_route_table.public_rt: Creating...
+aws_subnet.private_subnet: Creation complete after 1s [id=subnet-0b50328c1f88045c5]
+aws_route_table.public_rt: Creation complete after 1s [id=rtb-0a770bc4c0cb75b10]
+aws_security_group.alb_sg: Creation complete after 3s [id=sg-05bebf5bda8b8cebb]
+aws_security_group.ec2_sg: Creating...
+aws_security_group.ec2_sg: Creation complete after 3s [id=sg-0dc33cc80e43d4339]
+aws_subnet.public_subnet: Still creating... [00m10s elapsed]
+aws_subnet.public_subnet: Creation complete after 11s [id=subnet-0354126c9c502e0c1]
+aws_route_table_association.public_assoc: Creating...
+aws_route_table_association.public_assoc: Creation complete after 1s [id=rtbassoc-0afec50a966904b18]
+╷
+│ Error: importing EC2 Key Pair (bookverse-key): operation error EC2: ImportKeyPair, https response error StatusCode: 400, RequestID: 18a14993-ad4f-43e9-bc90-35a9cf6ff934, api error InvalidKeyPair.Duplicate: The keypair already exists
+│
+│   with aws_key_pair.bookverse_key,
+│   on main.tf line 107, in resource "aws_key_pair" "bookverse_key":
+│  107: resource "aws_key_pair" "bookverse_key" {
+│
+╵
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform apply
+aws_vpc.bookverse_vpc: Refreshing state... [id=vpc-0911a60255e733ec6]
+aws_internet_gateway.igw: Refreshing state... [id=igw-0df844b93b57ddbf5]
+aws_subnet.public_subnet: Refreshing state... [id=subnet-0354126c9c502e0c1]
+aws_subnet.private_subnet: Refreshing state... [id=subnet-0b50328c1f88045c5]
+aws_security_group.alb_sg: Refreshing state... [id=sg-05bebf5bda8b8cebb]
+aws_route_table.public_rt: Refreshing state... [id=rtb-0a770bc4c0cb75b10]
+aws_route_table_association.public_assoc: Refreshing state... [id=rtbassoc-0afec50a966904b18]
+aws_security_group.ec2_sg: Refreshing state... [id=sg-0dc33cc80e43d4339]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.bookverse_ec2 will be created
+  + resource "aws_instance" "bookverse_ec2" {
+      + ami                                  = "ami-0fa3fe0fa7920f68e"
+      + arn                                  = (known after apply)
+      + associate_public_ip_address          = true
+      + availability_zone                    = (known after apply)
+      + disable_api_stop                     = (known after apply)
+      + disable_api_termination              = (known after apply)
+      + ebs_optimized                        = (known after apply)
+      + enable_primary_ipv6                  = (known after apply)
+      + force_destroy                        = false
+      + get_password_data                    = false
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      + id                                   = (known after apply)
+      + instance_initiated_shutdown_behavior = (known after apply)
+      + instance_lifecycle                   = (known after apply)
+      + instance_state                       = (known after apply)
+      + instance_type                        = "t2.micro"
+      + ipv6_address_count                   = (known after apply)
+      + ipv6_addresses                       = (known after apply)
+      + key_name                             = "bookverse-key"
+      + monitoring                           = (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      + placement_group_id                   = (known after apply)
+      + placement_partition_number           = (known after apply)
+      + primary_network_interface_id         = (known after apply)
+      + private_dns                          = (known after apply)
+      + private_ip                           = (known after apply)
+      + public_dns                           = (known after apply)
+      + public_ip                            = (known after apply)
+      + region                               = "us-east-1"
+      + secondary_private_ips                = (known after apply)
+      + security_groups                      = (known after apply)
+      + source_dest_check                    = true
+      + spot_instance_request_id             = (known after apply)
+      + subnet_id                            = "subnet-0354126c9c502e0c1"
+      + tags                                 = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tags_all                             = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tenancy                              = (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      + vpc_security_group_ids               = [
+          + "sg-0dc33cc80e43d4339",
+        ]
+
+      + capacity_reservation_specification (known after apply)
+
+      + cpu_options (known after apply)
+
+      + ebs_block_device (known after apply)
+
+      + enclave_options (known after apply)
+
+      + ephemeral_block_device (known after apply)
+
+      + instance_market_options (known after apply)
+
+      + maintenance_options (known after apply)
+
+      + metadata_options (known after apply)
+
+      + network_interface (known after apply)
+
+      + primary_network_interface (known after apply)
+
+      + private_dns_name_options (known after apply)
+
+      + root_block_device (known after apply)
+    }
+
+  # aws_key_pair.bookverse_key will be created
+  + resource "aws_key_pair" "bookverse_key" {
+      + arn             = (known after apply)
+      + fingerprint     = (known after apply)
+      + id              = (known after apply)
+      + key_name        = "bookverse-key"
+      + key_name_prefix = (known after apply)
+      + key_pair_id     = (known after apply)
+      + key_type        = (known after apply)
+      + public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDWUm/qG46TzrU+jpms3G4xs6bzm1Q/K9KBbXgefmS/4CqSde09q90AFHDkQyPtvwjnAbcVV/fvO9VGvl5nhx9EL0jQd03584+JsrErHyGenlV/RcvMmDrjCMoS/c8Wxw2/bpR1CqXF3eJPGY9MyBlNax9sxQWFKBKl2HvrSMkv8LfJgfh08Z3m1Wc5fF2+g371ZddMYY9SxZVN7UEepYFYamdu4md2PQ/0N/zkrO4Mti0QbZ4qcjp445D6KoQ3HCAK53PEIsTkZ6815sBVFYYCfCyk2fdIH4/izxUTZ6y7uGjRyMJNx5k2iblQBz/vdhf6QoC+xquqLcSBPmbWxCL9"
+      + region          = "us-east-1"
+      + tags_all        = (known after apply)
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+aws_key_pair.bookverse_key: Creating...
+aws_key_pair.bookverse_key: Creation complete after 1s [id=bookverse-key]
+aws_instance.bookverse_ec2: Creating...
+╷
+│ Error: creating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 400, RequestID: 3b86fcdb-eaa4-45f8-82b5-93444feae144, api error InvalidParameterCombination: The specified instance type is not eligible for Free Tier. For a list of Free Tier instance types, run 'describe-instance-types' with the filter 'free-tier-eligible=true'.
+│
+│   with aws_instance.bookverse_ec2,
+│   on main.tf line 113, in resource "aws_instance" "bookverse_ec2":
+│  113: resource "aws_instance" "bookverse_ec2" {
+│
+╵
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform plan
+aws_key_pair.bookverse_key: Refreshing state... [id=bookverse-key]
+aws_vpc.bookverse_vpc: Refreshing state... [id=vpc-0911a60255e733ec6]
+aws_subnet.public_subnet: Refreshing state... [id=subnet-0354126c9c502e0c1]
+aws_subnet.private_subnet: Refreshing state... [id=subnet-0b50328c1f88045c5]
+aws_internet_gateway.igw: Refreshing state... [id=igw-0df844b93b57ddbf5]
+aws_security_group.alb_sg: Refreshing state... [id=sg-05bebf5bda8b8cebb]
+aws_route_table.public_rt: Refreshing state... [id=rtb-0a770bc4c0cb75b10]
+aws_security_group.ec2_sg: Refreshing state... [id=sg-0dc33cc80e43d4339]
+aws_route_table_association.public_assoc: Refreshing state... [id=rtbassoc-0afec50a966904b18]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.bookverse_ec2 will be created
+  + resource "aws_instance" "bookverse_ec2" {
+      + ami                                  = "ami-0fa3fe0fa7920f68e"
+      + arn                                  = (known after apply)
+      + associate_public_ip_address          = true
+      + availability_zone                    = (known after apply)
+      + disable_api_stop                     = (known after apply)
+      + disable_api_termination              = (known after apply)
+      + ebs_optimized                        = (known after apply)
+      + enable_primary_ipv6                  = (known after apply)
+      + force_destroy                        = false
+      + get_password_data                    = false
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      + id                                   = (known after apply)
+      + instance_initiated_shutdown_behavior = (known after apply)
+      + instance_lifecycle                   = (known after apply)
+      + instance_state                       = (known after apply)
+      + instance_type                        = "t3.micro"
+      + ipv6_address_count                   = (known after apply)
+      + ipv6_addresses                       = (known after apply)
+      + key_name                             = "bookverse-key"
+      + monitoring                           = (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      + placement_group_id                   = (known after apply)
+      + placement_partition_number           = (known after apply)
+      + primary_network_interface_id         = (known after apply)
+      + private_dns                          = (known after apply)
+      + private_ip                           = (known after apply)
+      + public_dns                           = (known after apply)
+      + public_ip                            = (known after apply)
+      + region                               = "us-east-1"
+      + secondary_private_ips                = (known after apply)
+      + security_groups                      = (known after apply)
+      + source_dest_check                    = true
+      + spot_instance_request_id             = (known after apply)
+      + subnet_id                            = "subnet-0354126c9c502e0c1"
+      + tags                                 = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tags_all                             = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tenancy                              = (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      + vpc_security_group_ids               = [
+          + "sg-0dc33cc80e43d4339",
+        ]
+
+      + capacity_reservation_specification (known after apply)
+
+      + cpu_options (known after apply)
+
+      + ebs_block_device (known after apply)
+
+      + enclave_options (known after apply)
+
+      + ephemeral_block_device (known after apply)
+
+      + instance_market_options (known after apply)
+
+      + maintenance_options (known after apply)
+
+      + metadata_options (known after apply)
+
+      + network_interface (known after apply)
+
+      + primary_network_interface (known after apply)
+
+      + private_dns_name_options (known after apply)
+
+      + root_block_device (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform apply -auto-approve
+aws_key_pair.bookverse_key: Refreshing state... [id=bookverse-key]
+aws_vpc.bookverse_vpc: Refreshing state... [id=vpc-0911a60255e733ec6]
+aws_subnet.private_subnet: Refreshing state... [id=subnet-0b50328c1f88045c5]
+aws_internet_gateway.igw: Refreshing state... [id=igw-0df844b93b57ddbf5]
+aws_subnet.public_subnet: Refreshing state... [id=subnet-0354126c9c502e0c1]
+aws_security_group.alb_sg: Refreshing state... [id=sg-05bebf5bda8b8cebb]
+aws_route_table.public_rt: Refreshing state... [id=rtb-0a770bc4c0cb75b10]
+aws_security_group.ec2_sg: Refreshing state... [id=sg-0dc33cc80e43d4339]
+aws_route_table_association.public_assoc: Refreshing state... [id=rtbassoc-0afec50a966904b18]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.bookverse_ec2 will be created
+  + resource "aws_instance" "bookverse_ec2" {
+      + ami                                  = "ami-0fa3fe0fa7920f68e"
+      + arn                                  = (known after apply)
+      + associate_public_ip_address          = true
+      + availability_zone                    = (known after apply)
+      + disable_api_stop                     = (known after apply)
+      + disable_api_termination              = (known after apply)
+      + ebs_optimized                        = (known after apply)
+      + enable_primary_ipv6                  = (known after apply)
+      + force_destroy                        = false
+      + get_password_data                    = false
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      + id                                   = (known after apply)
+      + instance_initiated_shutdown_behavior = (known after apply)
+      + instance_lifecycle                   = (known after apply)
+      + instance_state                       = (known after apply)
+      + instance_type                        = "t3.micro"
+      + ipv6_address_count                   = (known after apply)
+      + ipv6_addresses                       = (known after apply)
+      + key_name                             = "bookverse-key"
+      + monitoring                           = (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      + placement_group_id                   = (known after apply)
+      + placement_partition_number           = (known after apply)
+      + primary_network_interface_id         = (known after apply)
+      + private_dns                          = (known after apply)
+      + private_ip                           = (known after apply)
+      + public_dns                           = (known after apply)
+      + public_ip                            = (known after apply)
+      + region                               = "us-east-1"
+      + secondary_private_ips                = (known after apply)
+      + security_groups                      = (known after apply)
+      + source_dest_check                    = true
+      + spot_instance_request_id             = (known after apply)
+      + subnet_id                            = "subnet-0354126c9c502e0c1"
+      + tags                                 = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tags_all                             = {
+          + "Name" = "BookVerse-EC2"
+        }
+      + tenancy                              = (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      + vpc_security_group_ids               = [
+          + "sg-0dc33cc80e43d4339",
+        ]
+
+      + capacity_reservation_specification (known after apply)
+
+      + cpu_options (known after apply)
+
+      + ebs_block_device (known after apply)
+
+      + enclave_options (known after apply)
+
+      + ephemeral_block_device (known after apply)
+
+      + instance_market_options (known after apply)
+
+      + maintenance_options (known after apply)
+
+      + metadata_options (known after apply)
+
+      + network_interface (known after apply)
+
+      + primary_network_interface (known after apply)
+
+      + private_dns_name_options (known after apply)
+
+      + root_block_device (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+aws_instance.bookverse_ec2: Creating...
+aws_instance.bookverse_ec2: Still creating... [00m10s elapsed]
+aws_instance.bookverse_ec2: Creation complete after 13s [id=i-09ea8075004f8685e]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+C:\Users\prath\bookverse-aws-project\terraform>terraform output
+alb_sg_id = "sg-05bebf5bda8b8cebb"
+ami_id = "ami-0fa3fe0fa7920f68e"
+ec2_sg_id = "sg-0dc33cc80e43d4339"
+key_name = "bookverse-key"
+private_subnet_ids = [
+  "subnet-0b50328c1f88045c5",
+]
+public_subnet_ids = [
+  "subnet-0354126c9c502e0c1",
+]
+vpc_id = "vpc-0911a60255e733ec6"
