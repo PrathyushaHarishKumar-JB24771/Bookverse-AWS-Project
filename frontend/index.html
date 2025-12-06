@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BookVerse · Vintage Book Shelf</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f4ecdd;
+      --bg-soft: #f2e3cc;
+      --card: #f8ecda;
+      --card-soft: #fdf3e3;
+      --border: #cbae8c;
+      --accent: #b9804a;
+      --accent-dark: #8a5d32;
+      --ink: #3b2b23;
+      --ink-soft: #6d5341;
+      --ink-softer: #8a6a52;
+      --danger: #b33a3a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #fdf5e4 0, #f1dfc2 45%, #e4d2b7 100%);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .app-shell {
+      max-width: 1120px;
+      width: 100%;
+      background: radial-gradient(circle at top, #f8ecda 0, #f3e0c3 55%, #edd4b2 100%);
+      border-radius: 24px;
+      border: 1px solid rgba(181, 147, 104, 0.7);
+      box-shadow:
+        0 18px 50px rgba(116, 86, 55, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.8);
+      padding: 22px 26px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.5) 0, transparent 50%),
+        radial-gradient(circle at 100% 0, rgba(239, 212, 173, 0.7) 0, transparent 55%),
+        radial-gradient(circle at 50% 120%, rgba(216, 178, 132, 0.7) 0, transparent 55%);
+      opacity: 0.8;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header.app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(181, 147, 104, 0.7);
+      margin-bottom: 16px;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      background:
+        radial-gradient(circle at 30% 20%, #fff7ea, #d7b28a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--accent-dark);
+      box-shadow:
+        0 8px 18px rgba(116, 86, 55, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-dark);
+    }
+
+    .brand-text p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+    }
+
+    .ribbon {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      background: linear-gradient(to right, #fdf3e2, #edd3aa);
+      color: var(--ink-soft);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ribbon-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #2f855a;
+      box-shadow: 0 0 0 4px rgba(47, 133, 90, 0.25);
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      animation: fadeIn 200ms ease-out;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Welcome screen */
+    .welcome-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 22px;
+      padding-top: 4px;
+    }
+
+    .welcome-main-title {
+      font-size: 2rem;
+      margin: 0 0 10px;
+      color: var(--ink);
+    }
+
+    .welcome-main-title span {
+      background: linear-gradient(to right, #b9804a, #8a5d32);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .welcome-subtitle {
+      font-size: 0.96rem;
+      color: var(--ink-soft);
+      margin: 0 0 16px;
+    }
+
+    .welcome-card {
+      background: var(--bg-soft);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 14px 16px 16px;
+      box-shadow: 0 12px 22px rgba(132, 101, 68, 0.35);
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    .welcome-card h2 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-dark);
+    }
+
+    .welcome-list {
+      list-style: none;
+      margin: 8px 0 0;
+      padding: 0;
+    }
+
+    .welcome-list li {
+      margin-bottom: 6px;
+    }
+
+    .welcome-side-note {
+      background: rgba(254, 247, 235, 0.9);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 12px 13px 14px;
+      box-shadow: 0 12px 24px rgba(132, 101, 68, 0.45);
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+
+    .welcome-side-note strong {
+      color: var(--accent-dark);
+      font-weight: 600;
+    }
+
+    .welcome-cta {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition:
+        transform 120ms ease-out,
+        box-shadow 120ms ease-out,
+        background 150ms ease-out,
+        border-color 150ms ease-out,
+        color 150ms ease-out;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #c58a4c, #a36739);
+      color: #fdf6eb;
+      font-weight: 600;
+      box-shadow:
+        0 14px 30px rgba(140, 103, 66, 0.65);
+      border: 1px solid rgba(145, 103, 61, 0.95);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 18px 36px rgba(113, 80, 50, 0.8);
+      background: linear-gradient(to right, #bf7d3e, #94572f);
+    }
+
+    .btn-ghost {
+      background: rgba(252, 244, 231, 0.7);
+      border: 1px dashed rgba(181, 147, 104, 0.9);
+      color: var(--ink-soft);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 249, 239, 0.95);
+      color: var(--ink);
+    }
+
+    /* Shelf screen layout */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 880px) {
+      .welcome-layout,
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-heading {
+      margin-bottom: 10px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--ink);
+    }
+
+    .section-heading p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+
+    .filter-row {
+      margin: 14px 0 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      background: rgba(255, 249, 237, 0.9);
+      padding: 5px 11px;
+      font-size: 0.83rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: var(--ink-soft);
+      transition: background 140ms ease-out, color 140ms ease-out, border-color 140ms ease-out,
+        box-shadow 140ms ease-out, transform 100ms ease-out;
+    }
+
+    .chip span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(185, 128, 74, 0.9);
+    }
+
+    .chip.active {
+      background: linear-gradient(to right, #c78a4e, #ae6b38);
+      color: #fdf6eb;
+      border-color: rgba(145, 103, 61, 0.95);
+      box-shadow: 0 8px 16px rgba(130, 97, 61, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .chip.active span.dot {
+      background: #fbe1c2;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .book-card {
+      background: var(--card);
+      border-radius: 15px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      padding: 8px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      cursor: pointer;
+      transition: transform 120ms ease-out, box-shadow 120ms ease-out, border-color 120ms ease-out,
+        background 120ms ease-out;
+      box-shadow: 0 8px 16px rgba(132, 101, 68, 0.35);
+    }
+
+    .book-card:hover {
+      transform: translateY(-3px) translateZ(0);
+      box-shadow: 0 13px 24px rgba(110, 82, 52, 0.55);
+      border-color: rgba(145, 103, 61, 0.95);
+      background: var(--card-soft);
+    }
+
+    .cover-frame {
+      border-radius: 11px;
+      overflow: hidden;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      height: 120px;
+      background: radial-gradient(circle at top left, #f7e0c2, #d3ae84);
+      box-shadow: 0 7px 13px rgba(126, 92, 59, 0.35);
+    }
+
+    .cover-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.04);
+      transition: transform 160ms ease-out;
+    }
+
+    .book-card:hover .cover-image {
+      transform: scale(1.07);
+    }
+
+    .book-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .book-author {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .book-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 2px 7px;
+      background: #f1ddc4;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      color: var(--ink-soft);
+    }
+
+    /* Detail panel */
+    .detail-panel {
+      background: #f8ecda;
+      border-radius: 18px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      padding: 12px 14px 14px;
+      box-shadow: 0 10px 24px rgba(132, 101, 68, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detail-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-soft);
+      margin-bottom: 4px;
+    }
+
+    .detail-cover-frame {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      height: 190px;
+      background: radial-gradient(circle at top left, #f7e0c2, #d3ae84);
+      box-shadow: 0 10px 22px rgba(126, 92, 59, 0.45);
+      margin-bottom: 8px;
+    }
+
+    .detail-title {
+      margin: 0 0 4px;
+      font-size: 1.2rem;
+      color: var(--ink);
+    }
+
+    .detail-author {
+      margin: 0 0 8px;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    .detail-genre-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: #f2dfc4;
+      color: var(--ink);
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      margin-bottom: 6px;
+    }
+
+    .detail-genre-pill::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .detail-summary {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.55;
+      margin-bottom: 6px;
+    }
+
+    .detail-price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent-dark);
+      margin-bottom: 6px;
+    }
+
+    .detail-note {
+      font-size: 0.78rem;
+      color: var(--ink-softer);
+      margin-bottom: 10px;
+    }
+
+    .detail-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Checkout screen */
+    .crumbs {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+    }
+
+    .crumbs button {
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      color: var(--accent-dark);
+      cursor: pointer;
+    }
+
+    .crumbs button:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .form-card {
+      max-width: 520px;
+      background: #f3e1c9;
+      border-radius: 16px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      padding: 16px 16px 18px;
+      box-shadow: 0 16px 34px rgba(132, 101, 68, 0.6);
+    }
+
+    .form-row {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-soft);
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: #fdf4e6;
+      color: var(--ink);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(185, 128, 74, 0.5);
+    }
+
+    .error-text {
+      font-size: 0.78rem;
+      color: var(--danger);
+      margin-top: 4px;
+    }
+
+    .success-banner {
+      margin-top: 12px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(181, 147, 104, 0.9);
+      background: #fbead4;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    footer {
+      margin-top: 16px;
+      padding-top: 9px;
+      border-top: 1px dashed rgba(181, 147, 104, 0.9);
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 640px) {
+      .app-shell {
+        padding: 18px 14px 18px;
+        border-radius: 18px;
+      }
+      header.app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-inner">
+      <header class="app-header">
+        <div class="brand-mark">
+          <div class="brand-icon">B</div>
+          <div class="brand-text">
+            <h1>BookVerse</h1>
+            <p>Curated reads · Vintage shelf</p>
+          </div>
+        </div>
+        <div class="ribbon">
+          <span class="ribbon-dot"></span>
+          Seventeen handpicked titles
+        </div>
+      </header>
+
+      <!-- Screen 1: Welcome / Home -->
+      <section id="screen-welcome" class="screen active">
+        <div class="welcome-layout">
+          <div>
+            <h2 class="welcome-main-title">
+              Welcome to <span>BookVerse</span>
+            </h2>
+            <p class="welcome-subtitle">
+              A small, quiet shelf of books to browse — no accounts, no noise.
+              Just romance, fiction, and non-fiction that readers return to.
+            </p>
+
+            <div class="welcome-card">
+              <h2>What you can do</h2>
+              <ul class="welcome-list">
+                <li>Browse a curated set of titles by genre.</li>
+                <li>Tap any cover to see a short description and sample price.</li>
+                <li>Use the vintage checkout card to “save” a book (demo only).</li>
+              </ul>
+            </div>
+
+            <div class="welcome-cta">
+              <button id="btn-start" class="btn btn-primary">
+                Start browsing books
+                <span>↠</span>
+              </button>
+              <button id="btn-skip" class="btn btn-ghost">
+                Skip intro · go to shelf
+              </button>
+            </div>
+          </div>
+
+          <aside class="welcome-side-note">
+            <strong>Today’s mood:</strong> warm paper, soft light, and a stack of books
+            waiting on the coffee table. Use this page as a simple, visual front door
+            to your AWS project — everything you see is served from one static file
+            and a small <code>/covers</code> folder.
+          </aside>
+        </div>
+      </section>
+
+      <!-- Screen 2: Shelf (filters + cards + detail) -->
+      <section id="screen-shelf" class="screen">
+        <main class="layout">
+          <!-- Left: filters + grid -->
+          <section>
+            <div class="section-heading">
+              <h2>Browse the shelf</h2>
+              <p>Filter by genre and tap a book to see more details.</p>
+            </div>
+
+            <div class="filter-row">
+              <button class="chip active" data-genre="all">
+                <span class="dot"></span>
+                All
+              </button>
+              <button class="chip" data-genre="Romance">
+                <span class="dot"></span>
+                Romance
+              </button>
+              <button class="chip" data-genre="Fiction">
+                <span class="dot"></span>
+                Fiction
+              </button>
+              <button class="chip" data-genre="Non-Fiction">
+                <span class="dot"></span>
+                Non-Fiction
+              </button>
+            </div>
+
+            <div id="books-grid" class="books-grid"></div>
+          </section>
+
+          <!-- Right: detail panel -->
+          <aside class="detail-panel" aria-live="polite">
+            <div class="detail-label">Book details</div>
+            <div class="detail-cover-frame">
+              <img id="detail-cover" class="cover-image" src="" alt="Selected book cover" />
+            </div>
+            <div class="detail-genre-pill">
+              <span id="detail-genre-label">Genre</span>
+            </div>
+            <h2 id="detail-title" class="detail-title">Select a book</h2>
+            <p id="detail-author" class="detail-author"></p>
+            <p id="detail-summary" class="detail-summary"></p>
+            <div id="detail-price" class="detail-price"></div>
+            <p class="detail-note">
+              All prices are sample values for this demo shelf — no real checkout
+              or payment happens here.
+            </p>
+            <div class="detail-actions">
+              <button id="btn-go-checkout" class="btn btn-primary">
+                Proceed to checkout (demo)
+              </button>
+              <button id="btn-back-home" class="btn btn-ghost">
+                Back to welcome
+              </button>
+            </div>
+          </aside>
+        </main>
+      </section>
+
+      <!-- Screen 3: Checkout -->
+      <section id="screen-checkout" class="screen">
+        <div class="crumbs">
+          <button type="button" id="back-to-shelf">⟵ Back to shelf</button>
+        </div>
+        <h2 style="margin-top: 0; margin-bottom: 6px; color: var(--ink);">
+          Checkout · <span id="checkout-book-title">Selected book</span>
+        </h2>
+        <p style="margin-top: 0; margin-bottom: 14px; font-size: 0.9rem; color: var(--ink-soft);">
+          Fill in this card to simulate saving a book to your reading list.
+          This is a front-end only demo — no orders are stored and no real
+          payment is processed.
+        </p>
+
+        <div class="form-card">
+          <form id="checkout-form" novalidate>
+            <div class="form-row">
+              <label for="customer-name">Full name</label>
+              <input id="customer-name" type="text" placeholder="Ada Lovelace" required />
+              <div class="error-text" id="err-name" style="display:none;">Please enter your name.</div>
+            </div>
+
+            <div class="form-row">
+              <label for="customer-email">Email</label>
+              <input id="customer-email" type="email" placeholder="you@example.com" required />
+              <div class="error-text" id="err-email" style="display:none;">Please enter a valid email.</div>
+            </div>
+
+            <div class="form-row">
+              <label for="customer-phone">Phone</label>
+              <input id="customer-phone" type="tel" placeholder="+1 (555) 123-4567" required />
+              <div class="error-text" id="err-phone" style="display:none;">Please enter a phone number.</div>
+            </div>
+
+            <div style="margin-top: 14px; display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="submit" class="btn btn-primary">
+                Complete demo checkout
+              </button>
+              <button type="button" id="cancel-checkout" class="btn btn-ghost">
+                Cancel and go back
+              </button>
+            </div>
+          </form>
+
+          <div id="checkout-success" class="success-banner" style="display:none;">
+            Thank you! Your demo request for
+            <strong id="success-book-title"></strong> has been noted.
+            In a real system, this step could trigger a backend order workflow
+            or email confirmation.
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <span>BookVerse · Three-screen vintage demo</span>
+        <span>HTML + JS only · Covers loaded from <code>/covers</code></span>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // --- Data: only the books you actually have covers for ---
+    const BOOKS = [
+      // Romance
+      {
+        id: "romance-1",
+        genre: "Romance",
+        title: "Pride and Prejudice",
+        author: "Jane Austen",
+        tagline: "Sharp wit, stubborn hearts, and second chances.",
+        summary:
+          "Elizabeth Bennet and Mr. Darcy navigate pride, prejudice, and social expectations in this classic, slow-burn romance.",
+        price: "$14.99",
+        image: "covers/pride-and-prejudice.jpg",
+      },
+      {
+        id: "romance-2",
+        genre: "Romance",
+        title: "Outlander",
+        author: "Diana Gabaldon",
+        tagline: "Time travel, Highlanders, and sweeping passion.",
+        summary:
+          "WWII nurse Claire Randall is pulled back to 18th-century Scotland, where she finds herself torn between two centuries and two great loves.",
+        price: "$18.50",
+        image: "covers/outlander.jpg",
+      },
+      {
+        id: "romance-3",
+        genre: "Romance",
+        title: "Wuthering Heights",
+        author: "Emily Brontë",
+        tagline: "Dark moors, doomed love, unforgettable atmosphere.",
+        summary:
+          "A haunting tale of obsession and revenge centered on the intense, destructive bond between Catherine Earnshaw and Heathcliff.",
+        price: "$13.40",
+        image: "covers/wuthering-heights.jpg",
+      },
+      {
+        id: "romance-4",
+        genre: "Romance",
+        title: "The Notebook",
+        author: "Nicholas Sparks",
+        tagline: "A summer romance that lasts a lifetime.",
+        summary:
+          "Allie and Noah fall in love one summer and spend the rest of their lives proving that some stories really are unforgettable.",
+        price: "$11.95",
+        image: "covers/the-notebook.jpg",
+      },
+      {
+        id: "romance-5",
+        genre: "Romance",
+        title: "Jane Eyre",
+        author: "Charlotte Brontë",
+        tagline: "A fierce heroine and a mysterious estate.",
+        summary:
+          "Orphaned Jane Eyre grows into an independent, principled woman and confronts secrets, power, and passion at Thornfield Hall.",
+        price: "$15.20",
+        image: "covers/jane-eyre.jpg",
+      },
+      {
+        id: "romance-6",
+        genre: "Romance",
+        title: "The Time Traveler’s Wife",
+        author: "Audrey Niffenegger",
+        tagline: "A love story tangled in time.",
+        summary:
+          "Clare and Henry try to build a life together, even as Henry’s involuntary time travel pulls him unpredictably through their shared history.",
+        price: "$17.10",
+        image: "covers/the-time-travelers-wife.jpg",
+      },
+      {
+        id: "romance-7",
+        genre: "Romance",
+        title: "Me Before You",
+        author: "Jojo Moyes",
+        tagline: "A small-town girl and a life-changing job.",
+        summary:
+          "Louisa Clark takes a caregiving job with Will Traynor and discovers how love can challenge every plan she thought she had.",
+        price: "$13.75",
+        image: "covers/me-before-you.jpg",
+      },
+
+      // Fiction
+      {
+        id: "fiction-1",
+        genre: "Fiction",
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        tagline: "Childhood, courage, and a trial in the Deep South.",
+        summary:
+          "Scout Finch grows up in a small Southern town and watches her father stand up for justice in a powerful story about empathy and moral courage.",
+        price: "$13.99",
+        image: "covers/to-kill-a-mockingbird.jpg",
+      },
+      {
+        id: "fiction-2",
+        genre: "Fiction",
+        title: "The Hobbit",
+        author: "J.R.R. Tolkien",
+        tagline: "There and back again with an unlikely hero.",
+        summary:
+          "Bilbo Baggins leaves his comfortable hobbit-hole for an adventure with dwarves, a dragon, and a certain ring that changes everything.",
+        price: "$16.25",
+        image: "covers/the-hobbit.jpg",
+      },
+      {
+        id: "fiction-3",
+        genre: "Fiction",
+        title: "The Alchemist",
+        author: "Paulo Coelho",
+        tagline: "Follow your Personal Legend.",
+        summary:
+          "Shepherd boy Santiago travels in search of treasure and discovers that the real journey is about purpose, courage, and listening to the heart.",
+        price: "$10.90",
+        image: "covers/the-alchemist.jpg",
+      },
+      {
+        id: "fiction-4",
+        genre: "Fiction",
+        title: "The Great Gatsby",
+        author: "F. Scott Fitzgerald",
+        tagline: "Glamour, longing, and the American Dream.",
+        summary:
+          "Nick Carraway watches the mysterious Jay Gatsby chase a glittering dream of love and status across a dazzling, hollow Jazz Age.",
+        price: "$11.99",
+        image: "covers/the-great-gatsby.jpg",
+      },
+
+      // Non-Fiction
+      {
+        id: "nf-1",
+        genre: "Non-Fiction",
+        title: "The Diary of a Young Girl",
+        author: "Anne Frank",
+        tagline: "A young voice that touched the whole world.",
+        summary:
+          "Anne Frank’s diary records daily life, hope, and fear while her family hides from the Nazis, offering an unforgettable personal account of the Holocaust.",
+        price: "$9.99",
+        image: "covers/diary-of-a-young-girl.jpg",
+      },
+      {
+        id: "nf-2",
+        genre: "Non-Fiction",
+        title: "The Glass Castle",
+        author: "Jeannette Walls",
+        tagline: "A childhood on the move, and a life rebuilt.",
+        summary:
+          "Walls recounts her unconventional upbringing with charismatic but deeply flawed parents, and how she rebuilt her life on her own terms.",
+        price: "$14.30",
+        image: "covers/the-glass-castle.jpg",
+      },
+      {
+        id: "nf-3",
+        genre: "Non-Fiction",
+        title: "Atomic Habits",
+        author: "James Clear",
+        tagline: "Tiny changes, remarkable results.",
+        summary:
+          "A practical guide to building better habits, breaking bad ones, and making small changes that compound into big results over time.",
+        price: "$17.50",
+        image: "covers/atomic-habits.jpg",
+      },
+      {
+        id: "nf-4",
+        genre: "Non-Fiction",
+        title: "Becoming",
+        author: "Michelle Obama",
+        tagline: "From Chicago’s South Side to the White House.",
+        summary:
+          "The former First Lady reflects on her childhood, career, and time in the White House in a candid, inspiring memoir.",
+        price: "$19.20",
+        image: "covers/becoming.jpg",
+      },
+      {
+        id: "nf-5",
+        genre: "Non-Fiction",
+        title: "The Power of Habit",
+        author: "Charles Duhigg",
+        tagline: "Why we do what we do.",
+        summary:
+          "Duhigg explains how habits work in our brains and how understanding the habit loop can help us change our lives and organizations.",
+        price: "$14.10",
+        image: "covers/the-power-of-habit.jpg",
+      },
+      {
+        id: "nf-6",
+        genre: "Non-Fiction",
+        title: "Thinking, Fast and Slow",
+        author: "Daniel Kahneman",
+        tagline: "How your mind makes decisions.",
+        summary:
+          "Nobel laureate Daniel Kahneman explores the two systems of thinking — fast and intuitive, slow and deliberate — and how they shape our choices.",
+        price: "$18.40",
+        image: "covers/thinking-fast-and-slow.jpg",
+      },
+    ];
+
+    // --- State ---
+    let currentGenre = "all";
+    let selectedBookId = BOOKS[0]?.id || null;
+
+    // --- Elements ---
+    const screens = {
+      welcome: document.getElementById("screen-welcome"),
+      shelf: document.getElementById("screen-shelf"),
+      checkout: document.getElementById("screen-checkout"),
+    };
+
+    const booksGrid = document.getElementById("books-grid");
+    const filterChips = document.querySelectorAll(".chip");
+
+    const detailCover = document.getElementById("detail-cover");
+    const detailGenreLabel = document.getElementById("detail-genre-label");
+    const detailTitle = document.getElementById("detail-title");
+    const detailAuthor = document.getElementById("detail-author");
+    const detailSummary = document.getElementById("detail-summary");
+    const detailPrice = document.getElementById("detail-price");
+
+    const checkoutBookTitle = document.getElementById("checkout-book-title");
+    const successBookTitle = document.getElementById("success-book-title");
+
+    const checkoutForm = document.getElementById("checkout-form");
+    const errName = document.getElementById("err-name");
+    const errEmail = document.getElementById("err-email");
+    const errPhone = document.getElementById("err-phone");
+    const successBanner = document.getElementById("checkout-success");
+
+    // --- Screen navigation ---
+    function showScreen(which) {
+      Object.values(screens).forEach((s) => s.classList.remove("active"));
+      screens[which].classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("btn-start").addEventListener("click", () => {
+      showScreen("shelf");
+    });
+
+    document.getElementById("btn-skip").addEventListener("click", () => {
+      showScreen("shelf");
+    });
+
+    document.getElementById("btn-back-home").addEventListener("click", () => {
+      showScreen("welcome");
+    });
+
+    document.getElementById("back-to-shelf").addEventListener("click", () => {
+      showScreen("shelf");
+    });
+
+    document.getElementById("cancel-checkout").addEventListener("click", () => {
+      showScreen("shelf");
+    });
+
+    // --- Stable shuffle so "All" looks nicely mixed every time ---
+    function hashId(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) {
+        h = (h * 31 + str.charCodeAt(i)) | 0;
+      }
+      return h;
+    }
+
+    function stableShuffle(arr) {
+      return [...arr].sort((a, b) => hashId(a.id) - hashId(b.id));
+    }
+
+    // --- Render books grid ---
+    function renderBooks() {
+      booksGrid.innerHTML = "";
+      let filtered = BOOKS.filter(
+        (b) => currentGenre === "all" || b.genre === currentGenre
+      );
+      if (currentGenre === "all") {
+        filtered = stableShuffle(filtered);
+      }
+
+      filtered.forEach((book) => {
+        const card = document.createElement("article");
+        card.className = "book-card";
+        card.dataset.id = book.id;
+        card.innerHTML = `
+          <div class="cover-frame">
+            <img
+              class="cover-image"
+              src="${book.image}"
+              alt="${book.title} cover"
+              loading="lazy"
+            />
+          </div>
+          <div class="book-title">${book.title}</div>
+          <div class="book-author">By ${book.author}</div>
+          <div class="book-meta-row">
+            <span class="pill">${book.genre}</span>
+            <span>${book.price}</span>
+          </div>
+        `;
+        card.addEventListener("click", () => {
+          selectedBookId = book.id;
+          updateDetails();
+        });
+        booksGrid.appendChild(card);
+      });
+    }
+
+    // --- Update detail panel ---
+    function updateDetails() {
+      const book =
+        BOOKS.find((b) => b.id === selectedBookId) || BOOKS[0] || null;
+      if (!book) return;
+
+      detailCover.src = book.image;
+      detailCover.alt = `${book.title} cover`;
+      detailGenreLabel.textContent = book.genre;
+      detailTitle.textContent = book.title;
+      detailAuthor.textContent = `By ${book.author}`;
+      detailSummary.textContent = book.summary;
+      detailPrice.textContent = book.price;
+
+      checkoutBookTitle.textContent = book.title;
+      if (successBookTitle) successBookTitle.textContent = book.title;
+    }
+
+    // --- Filters ---
+    filterChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        filterChips.forEach((c) => c.classList.remove("active"));
+        chip.classList.add("active");
+        currentGenre = chip.dataset.genre;
+        renderBooks();
+      });
+    });
+
+    // --- Checkout button from detail panel ---
+    document.getElementById("btn-go-checkout").addEventListener("click", () => {
+      // reset form + success
+      errName.style.display = "none";
+      errEmail.style.display = "none";
+      errPhone.style.display = "none";
+      successBanner.style.display = "none";
+      checkoutForm.reset();
+
+      const book =
+        BOOKS.find((b) => b.id === selectedBookId) || BOOKS[0] || null;
+      if (book) {
+        checkoutBookTitle.textContent = book.title;
+        successBookTitle.textContent = book.title;
+      }
+
+      showScreen("checkout");
+    });
+
+    // --- Fake checkout form ---
+    checkoutForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      errName.style.display = "none";
+      errEmail.style.display = "none";
+      errPhone.style.display = "none";
+
+      const name = document.getElementById("customer-name").value.trim();
+      const email = document.getElementById("customer-email").value.trim();
+      const phone = document.getElementById("customer-phone").value.trim();
+
+      let valid = true;
+      if (!name) {
+        errName.style.display = "block";
+        valid = false;
+      }
+      if (!email || !email.includes("@")) {
+        errEmail.style.display = "block";
+        valid = false;
+      }
+      if (!phone) {
+        errPhone.style.display = "block";
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      successBanner.style.display = "block";
+    });
+
+    // --- Initial render ---
+    renderBooks();
+    updateDetails();
+  </script>
+</body>
+</html>
