@@ -4,7 +4,30 @@
 
 This project implements a scalable, production-style AWS architecture for a fictional book discovery app called **BookVerse**.
 
-It uses:
+# Project Overview
+
+BookVerse is a cloud-based web application designed to demonstrate a scalable, secure, and automated AWS architecture using Infrastructure as Code (IaC).
+The goal of this project was not to build a full-featured production application, but to design, deploy, and validate a real-world AWS infrastructure using multiple services working together.
+
+The system was built using a combination of Terraform and AWS CloudFormation, allowing different layers of the infrastructure to be provisioned in a repeatable and controlled manner. Terraform was used to create the core networking layer (VPC, subnets, routing, and security groups), while CloudFormation was used to deploy application-level resources such as EC2, Auto Scaling, Application Load Balancer, RDS, S3, and Lambda.
+
+The application architecture follows best practices by separating public and private resources. Public subnets host the Application Load Balancer and a bastion host for secure administrative access, while private subnets contain the EC2 web servers and the RDS MySQL database. This ensures that sensitive components like the database are never exposed to the public internet.
+
+A static frontend for BookVerse is hosted on Amazon S3 and serves as the user interface for browsing book genres and titles. Backend functionality is demonstrated using AWS Lambda functions. One Lambda function logs file uploads from an S3 bucket into CloudWatch Logs, while another Lambda is exposed through API Gateway to provide a simple HTTP endpoint. In addition, AWS Step Functions were implemented to orchestrate a multi-step “order workflow,” showing how serverless services can be combined to model real application processes.
+
+Interaction with AWS services was demonstrated in multiple ways:
+
+1. Through the AWS Management Console for verification
+
+2. Through the AWS CLI for resource management
+
+3. Through Python Boto3 scripts for programmatic access to EC2, S3, Lambda, and instance metadata
+
+Database connectivity was validated by securely connecting from a bastion host to the RDS MySQL instance and executing Python scripts that query real data stored in the database. This confirms that the backend database is correctly provisioned, secured, and reachable from within the VPC.
+
+Overall, this project demonstrates a complete AWS deployment lifecycle—including design, provisioning, validation, and automation—while following cloud security and scalability best practices. It reflects how modern cloud architectures are built and managed using Infrastructure as Code and managed AWS services.#
+
+# 1. Components Overview
 
 - **Terraform** – VPC, public & private subnets, routing, security groups
 - **CloudFormation** – EC2 Auto Scaling, Application Load Balancer (ALB), RDS MySQL, S3 uploads bucket, Lambda
@@ -17,7 +40,7 @@ It uses:
 
 ---
 
-## 1. Architecture Overview
+## 2. Architecture Overview
 
 High-level components:
 
@@ -58,65 +81,4 @@ High-level components:
     - `CompleteOrder` (Lambda)
 
 ---
-
-**PROJECT OVERVIEW**
-┌──────────────────────────────────────────────────────────────┐
-│                          GitHub                               │
-│               (Terraform / CloudFormation / CI-CD)            │
-│                          |                                   │
-│                      GitHub Actions                           │
-│                          |                                   │
-│                   AWS CodeDeploy                              │
-│                          |                                   │
-│                      S3 (Artifacts)                           │
-└──────────────────────────────────────────────────────────────┘
-                                  |
-                                  v
-┌───────────────────────────────────────────────────────────────────────────────┐
-│                                 AWS Account                                   │
-│                                                                               │
-│  ┌────────────────────────── VPC (bookverse-vpc) ──────────────────────────┐ │
-│  │                                                                           │ │
-│  │  ┌──────────── Public Subnet A ─────────────┐   ┌────────────── Public Subnet B ───────────────┐ │
-│  │  │                                            │   │                                               │ │
-│  │  │   Internet Gateway                         │   │                                               │ │
-│  │  │        |                                  │   │                                               │ │
-│  │  │   Application Load Balancer (ALB)         │   │   Bastion Host (EC2)                           │ │
-│  │  │   (HTTP :80)                              │   │   SSH Access (port 22)                         │ │
-│  │  │        |                                  │   │                                               │ │
-│  │  └────────┬──────────────────────────────────┘   └──────────────┬────────────────────────────────┘ │
-│  │           |                                                        |                                   │
-│  │           v                                                        v                                   │
-│  │  ┌──────────────────────── Private Subnet A ─────────────────────────────────────────────────────┐ │
-│  │  │                                                                                                  │ │
-│  │  │   Auto Scaling Group                                                                              │ │
-│  │  │   ┌─────────────────────┐                                                                        │ │
-│  │  │   │ EC2 Web Server       │                                                                        │ │
-│  │  │   │ (Python HTTP Server) │                                                                        │ │
-│  │  │   │ Static BookVerse UI  │                                                                        │ │
-│  │  │   └─────────────────────┘                                                                        │ │
-│  │  │            |                                                                                     │ │
-│  │  │            v                                                                                     │ │
-│  │  │      RDS MySQL Database                                                                           │ │
-│  │  │      (Private, no public access)                                                                  │ │
-│  │  └──────────────────────────────────────────────────────────────────────────────────────────────────┘ │
-│  │                                                                                                       │
-│  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-│                                                                                                           │
-│   ┌─────────────── S3 Buckets ────────────────┐        ┌──────────── CloudWatch Logs ─────────────┐     │
-│   │                                           │        │                                             │     │
-│   │  • Uploads Bucket                         │ ─────▶│  Lambda Logs (S3 Upload Events)             │     │
-│   │                                           │        │                                             │     │
-│   │                                           │        └─────────────────────────────────────────────┘     │
-│   └───────────────────────────────────────────┘                                                            │
-│                                                                                                           │
-│   ┌──────────────────── Serverless & Orchestration ────────────────────┐                                 │
-│   │                                                                      │                                 │
-│   │  API Gateway  ─────▶  Lambda Functions                               │                                 │
-│   │                          |                                           │                                 │
-│   │                     Step Functions                                   │                                 │
-│   │              (Order Validation → Payment → Completion)               │                                 │
-│   └──────────────────────────────────────────────────────────────────────┘                                 │
-│                                                                                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
