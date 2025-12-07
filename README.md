@@ -2,202 +2,175 @@
 
 A scalable, cloud-native book discovery and ordering platform built on Amazon Web Services (AWS), demonstrating Infrastructure as Code (IaC), serverless workflows, secure cloud networking, and real-world AWS operations.
 
-AWS | Terraform | CloudFormation | EC2 | RDS | S3 | Lambda | API Gateway | Step Functions | Python | Boto3
+Tech Stack:
+AWS • Terraform • CloudFormation • EC2 • RDS • S3 • Lambda • API Gateway • Step Functions • Python • Boto3
 
 🎯 Overview
 
-BookVerse is a cloud-based application designed to showcase how a modern, scalable web platform can be architected and deployed on AWS using Infrastructure as Code and managed services.
+BookVerse is a cloud-based application built to showcase how a modern, scalable platform can be deployed on AWS using Infrastructure as Code and managed services.
 
-Conceptually, BookVerse represents an online book discovery platform where users can:
+Users can:
 
-Browse books by genre
+📖 Browse books by genre
 
-View book details (author, summary, genre)
+👀 View book details (author, summary, genre)
 
-Place book orders
+🛒 Place book orders
 
-Trigger backend workflows for order validation and processing
+⚙️ Trigger backend workflows for order validation & processing
 
-While the web interface is intentionally kept lightweight (static HTML/JS), the backend architecture is fully production-aligned, scalable, secure, and extensible.
-
-This project prioritizes cloud architecture, automation, security, and operational validation over UI complexity.
+The UI is intentionally simple—the focus is the AWS architecture and automation.
 
 🌟 Key Highlights
 
-✅ Infrastructure provisioned using Terraform and AWS CloudFormation
+✅ Infrastructure via Terraform + CloudFormation
 
-✅ Highly available EC2 instances behind an Application Load Balancer
+✅ Highly available EC2 behind ALB
 
-✅ Auto Scaling Group for web tier scalability
+✅ Auto Scaling Group for web tier
 
-✅ Secure MySQL database hosted on Amazon RDS
+✅ Secure RDS MySQL in private subnets
 
-✅ Amazon S3 for object storage and static assets
+✅ S3 for storage + Lambda trigger
 
-✅ Event-driven AWS Lambda for S3 upload logging
+✅ API Gateway + Lambda backend API
 
-✅ API Gateway + Lambda for HTTP-based backend API
+✅ Step Functions for order workflow
 
-✅ AWS Step Functions for order workflow automation
+✅ Bastion host for secure private access
 
-✅ Secure access using a Bastion Host
+✅ AWS interactions via Console, CLI, & Boto3
 
-✅ AWS interaction via Console, CLI, and Boto3
-
-✅ Fully version-controlled using GitHub
+✅ Fully version-controlled in GitHub
 
 🏗️ High-Level Architecture
-┌───────────────────────────────────────────────────────────────┐
-│                            Internet                           │
-└───────────────────────────────┬──────────────────────────────┘
-                                │
-                                ▼
-                    ┌────────────────────────────┐
-                    │   Application Load Balancer │
-                    │     (Internet-facing)       │
-                    └───────────────┬────────────┘
-                                    │
-                                    ▼
-                ┌────────────────────────────────────┐
-                │        Auto Scaling Group            │
-                │   EC2 Web Servers (Private Subnets)  │
-                └───────────────┬────────────────────┘
-                                │
-                   ┌────────────┼────────────┐
-                   ▼            ▼            ▼
-          ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐
-          │    Amazon    │  │   AWS Lambda │  │  API Gateway    │
-          │     RDS      │  │  (S3 Logger) │  │  + Lambda API   │
-          │   (MySQL)    │  └──────┬──────┘  └─────────────────┘
-          └─────────────┘         │
-                                  ▼
-                            ┌──────────────┐
-                            │ CloudWatch   │
-                            │     Logs     │
-                            └──────────────┘
+                   ┌───────────────────────────────┐
+                   │            Internet            │
+                   └─────────────────┬──────────────┘
+                                     │
+                                     ▼
+                        ┌───────────────────────────┐
+                        │  Application Load Balancer │
+                        └────────────┬──────────────┘
+                                     │
+                                     ▼
+                     ┌──────────────────────────────────┐
+                     │     Auto Scaling Group (EC2)     │
+                     │   Private Subnets, Web Servers   │
+                     └──────────────┬───────────────────┘
+                             ┌──────┼────────┬──────────┐
+                             ▼      ▼        ▼
+                       ┌────────┐ ┌────────┐ ┌───────────────┐
+                       │  RDS   │ │ Lambda │ │ API Gateway     │
+                       │ MySQL  │ │ S3 Log │ │ + Lambda Backend│
+                       └────┬───┘ └────────┘ └───────────────┘
+                            ▼
+                    ┌──────────────┐
+                    │ CloudWatch    │
+                    │    Logs       │
+                    └──────────────┘
 
 🏗️ Architecture Components
-1️⃣ Networking (Amazon VPC)
+1️⃣ Networking (VPC)
 Component	Details
-VPC CIDR	Custom VPC
-Public Subnets	2 (ALB, Bastion Host)
-Private Subnets	2 (EC2, RDS)
-Availability Zones	us-east-1a, us-east-1b
+VPC	Custom CIDR
+Public Subnets	ALB, Bastion Host
+Private Subnets	EC2, RDS
+AZs	us-east-1a, us-east-1b
 Internet Gateway	Enabled
 Routing	Public & private route tables
-
-✅ Provisioned using Terraform
-
-2️⃣ Compute (EC2)
+IaC	Terraform
+2️⃣ Compute (EC2 Web Tier)
 Component	Configuration
 Instance Type	t3.micro
 OS	Amazon Linux 2023
 Scaling	Auto Scaling Group
-Placement	Private subnets
+Network	Private subnets
 Access	Via ALB only
-
-✅ Deployed using CloudFormation
-
-3️⃣ Load Balancing (ALB)
+IaC	CloudFormation
+3️⃣ Load Balancer (ALB)
 Feature	Configuration
 Type	Application Load Balancer
 Scheme	Internet-facing
-Listener	HTTP (80)
-Health Checks	/
-Target	EC2 instances
+Listener	HTTP:80
+Target	EC2 (Private)
 4️⃣ Database (Amazon RDS – MySQL)
-Feature	Configuration
+Feature	Config
 Engine	MySQL
 Instance Class	db.t3.micro
-Storage	20 GB (gp2)
-Network	Private subnets only
+Storage	20 GB gp2
+Access	Private only
 Public Access	Disabled
-Security	SG-restricted
-
-✅ Database connectivity validated from within the VPC
-
+SG	Restricted inbound
 5️⃣ Storage (Amazon S3)
-Feature	Purpose
-Bucket	Object storage & uploads
-Access	Private
-Encryption	SSE-S3
-Integration	Lambda triggers on upload
+
+Private bucket
+
+SSE-S3 encryption
+
+Triggers Lambda on upload
+
 6️⃣ Serverless (AWS Lambda)
 🔹 S3 Upload Logger
 
 Triggered on ObjectCreated
 
-Logs upload metadata into CloudWatch
+Logs metadata to CloudWatch
 
-Demonstrates event-driven architecture
+🔹 API Lambda
 
-🔹 API Lambda (Bonus)
+Exposed through API Gateway
 
-Exposed via API Gateway
+Returns JSON response
 
-Returns real-time JSON response
-
-Invoked using curl and browser
-
-7️⃣ API Gateway (Bonus)
-Feature	Configuration
+7️⃣ API Gateway
+Feature	Details
 API Type	HTTP API
 Route	/hello
-Integration	Lambda proxy
+Integration	Lambda Proxy
 CORS	Enabled
-8️⃣ Workflow Automation (AWS Step Functions – Bonus)
+8️⃣ Step Functions Workflow
 
-BookVerse Order Workflow
+📦 Order Workflow Steps
 
-Validate Order
+Validate Order (Lambda)
 
-Process Payment (simulated)
+Process Payment (Lambda)
 
-Complete Order
+Complete Order (Lambda)
 
-Each step is:
+Execution logs fully traceable.
 
-A separate Lambda function
+9️⃣ Bastion Host
 
-JSON-based input/output
+SSH gateway
 
-Fully traceable via execution logs
+Located in public subnet
 
-✅ Workflow executed successfully end-to-end
-
-9️⃣ Bastion Host (Security)
-Purpose	Description
-Access	SSH gateway
-Location	Public subnet
-Usage	RDS validation & admin tasks
-
-✅ Demonstrates secure access to private resources
+Used for RDS validation & VPC access
 
 🧪 Backend Validation
 
-Even though BookVerse’s UI is static, the backend is fully functional:
-
 Python script connects to RDS
 
-Queries real book data
+Retrieves book data
 
-Prints results successfully
+S3 uploads trigger Lambda
 
-Confirms database + network correctness
+API Gateway returns JSON
+
+Workflow runs end-to-end
 
 🐍 Boto3 Scripts
 Script	Purpose
-Create S3 bucket + upload	Storage validation
-List running EC2	Compute inspection
-Retrieve EC2 metadata	IMDS validation
-Invoke Lambda	Serverless test
-
-All scripts executed successfully.
-
+Create S3 bucket	Validate storage
+List EC2	Inspect compute
+Instance metadata	IMDS validation
+Invoke Lambda	Test serverless
 📁 Project Structure
 bookverse-aws-project/
-├── terraform/                   # VPC, subnets, security groups
-├── cloudformation/              # EC2, ALB, RDS, Lambda, ASG
+├── terraform/
+├── cloudformation/
 ├── lambda/
 │   ├── s3_logger_lambda.py
 │   ├── api_hello_lambda.py
@@ -215,57 +188,62 @@ bookverse-aws-project/
 └── README.md
 
 🔁 Data Flow
-User Request
+Web App
+
 Browser → ALB → EC2 → Response
 
 File Upload
-Upload → S3 → Lambda → CloudWatch
+
+Client → S3 → Lambda → CloudWatch
 
 API Call
-Client → API Gateway → Lambda → JSON Response
 
-Workflow
-Order → Step Functions → Lambdas → Completion
+Client → API Gateway → Lambda → JSON
+
+Order Workflow
+
+API → Step Functions → Lambda chain → Complete
 
 💰 Cost Optimization
 
-Free-tier eligible instance sizes
+Free-tier eligible EC2 & RDS
 
-RDS Single-AZ
+Single-AZ database
 
-No always-on serverless compute
-
-Event-driven Lambda execution only
+Serverless on-demand
 
 Auto Scaling avoids overprovisioning
 
 🚀 Future Enhancements
 
-✅ HTTPS via ACM
+HTTPS via ACM
 
-✅ CloudFront CDN
+CloudFront CDN
 
-✅ CI/CD with GitHub Actions
+GitHub Actions CI/CD
 
-✅ User authentication (Cognito)
+Cognito authentication
 
-✅ UI-to-DB integration
+UI-to-DB integration
 
-✅ Monitoring dashboards
+Monitoring dashboards
 
-✅ Payment gateway integration
+Real payment gateway
 
-Project Outcome
+🎉 Project Outcome
 
-BookVerse successfully demonstrates:
+BookVerse demonstrates:
 
 ✅ Secure cloud networking
-✅ Scalable compute architecture
-✅ Database backend configuration
+
+✅ Highly available compute
+
+✅ RDS database deployment
+
 ✅ Serverless automation
+
 ✅ Workflow orchestration
-✅ Infrastructure as Code mastery
-✅ End-to-end validation
 
+✅ Infrastructure as Code
 
-
+✅ End-to-end cloud validation
