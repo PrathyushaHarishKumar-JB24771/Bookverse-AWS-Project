@@ -38,35 +38,46 @@ The UI is intentionally simple—**the focus is the AWS architecture and automat
 ---
 
 ## 🏗️ High-Level Architecture
-             +---------------------------+
-             |       Internet Gateway    |
-             +------------+--------------+
-                          |
-                          v
-             +---------------------------+
-             |   Application Load Balancer|
-             +------------+--------------+
-                          |
-                          v
-      +---------------------------+
-      |       Public Subnet       |
-      |   Bastion Host (EC2)      |
-      |       SSH: Port 22        |
-      +---------------------------+
-                          |
-                          v
-      +---------------------------+
-      |      Private Subnet       |
-      |   Auto Scaling Group      |
-      |   EC2 Web Servers (t3)   |
-      +------------+--------------+
-                   |
-                   v
-           +---------------+
-           |  RDS MySQL    |
-           |  (Private)    |
-           +---------------+
+         +---------------------------+
+         |       Internet Gateway    |
+         +------------+--------------+
+                      |
+                      v
+         +---------------------------+
+         | Application Load Balancer |
+         +------------+--------------+
+                      |
+                      v
+  +---------------------------+     +---------------------------+
+  |       Public Subnet A     |     |       Public Subnet B     |
+  |   Bastion Host (EC2)      |     |   SSH: Port 22            |
+  +---------------------------+     +-----------+---------------+
+                      |                        |
+                      |                        |
+                      +------------------------+
+                      |
+                      v
+  +---------------------------+
+  |       Private Subnet      |
+  |   Auto Scaling Group      |
+  |   EC2 Web Servers (t3)   |
+  +------------+--------------+
+               |
+               v
+       +---------------+
+       |  RDS MySQL    |
+       |  (Private)    |
+       +---------------+
 
+  +---------------------------+     +---------------------------+
+  |           S3              | --> |        AWS Lambda         |
+  |     Uploads / Files       |     | Logs uploads to CloudWatch|
+  +---------------------------+     +---------------------------+
+
+  +---------------------------+     +---------------------------+
+  |       API Gateway         | --> |      Step Functions       |
+  |      /hello /order        |     | Validate → Process → Done |
+  +---------------------------+     +---------------------------+
 
 ---
 
