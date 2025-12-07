@@ -58,8 +58,8 @@ The UI is intentionally simple—**the focus is the AWS architecture and automat
                           +-----------+------------+
                                       |
                                       v
-                      +---------------------------+
-                      |       Private Subnet      |
+                      +---------------------------+  
+                      |   Private Subnets A & B     |
                       |   Auto Scaling Group      |
                       |   EC2 Web Servers (t3)   |
                       +------------+--------------+
