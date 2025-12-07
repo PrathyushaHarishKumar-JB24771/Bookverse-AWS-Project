@@ -206,30 +206,6 @@ Execution logs fully traceable.
 
 ---
 
-## 📁 Project Structure
-
-bookverse-aws-project/
-├── terraform/
-├── cloudformation/
-├── lambda/
-│ ├── s3_logger_lambda.py
-│ ├── api_hello_lambda.py
-│ ├── validate_order.py
-│ ├── process_payment.py
-│ └── complete_order.py
-├── bastion-scripts/
-│ ├── get_instance_metadata.py
-│ ├── db_check.py
-│ └── requirements.txt
-├── step-functions/
-│ └── bookverse-order-workflow.asl.json
-├── frontend/
-│ └── index.html
-└── README.md
-
-
----
-
 ## 🔁 Data Flow
 
 **Web App:**  
